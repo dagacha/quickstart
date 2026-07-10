@@ -11,7 +11,7 @@ requires-python = ">=3.10,<3.15"
 readme = "README.md"
 license = "Apache-2.0"
 dependencies = [
-    "olas-operate-middleware==0.15.29",
+    "olas-operate-middleware==0.15.31",
     "tqdm==4.67.3",
     "python-dotenv==1.2.2",
     "gql[requests]==3.5.0",
