@@ -112,6 +112,18 @@
             "value": "fixed_bet",
             "provision_type": "fixed"
         },
+        "MAX_TRADES": {
+            "name": "Max trades (Omen only)",
+            "description": "Maximum number of successful Omen (not Polymarket) placements before the agent stops opening new positions and switches to Mech-only market analysis. Polymarket placements are not counted. Set to 0 to disable the cap.",
+            "value": "0",
+            "provision_type": "user"
+        },
+        "MAX_MECH_REQUESTS_PER_CYCLE": {
+            "name": "Max Mech requests per cycle",
+            "description": "Maximum number of open markets analyzed by the Mech per cycle after the trade cap is reached.",
+            "value": "10",
+            "provision_type": "fixed"
+        },
         "TOOLS_ACCURACY_HASH": {
             "name": "Tools accuracy hash",
             "description": "",
