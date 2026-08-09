@@ -109,13 +109,13 @@
         "TRADING_STRATEGY": {
             "name": "Trading strategy",
             "description": "",
-            "value": "fixed_bet",
+            "value": "kelly_criterion",
             "provision_type": "fixed"
         },
         "MAX_TRADES": {
             "name": "Max trades (Omen only)",
-            "description": "Maximum number of successful Omen (not Polymarket) placements before the agent stops opening new positions and switches to Mech-only market analysis. Polymarket placements are not counted. Set to 0 to disable the cap.",
-            "value": "0",
+            "description": "Maximum number of successful Omen placements before the agent stops opening new positions and switches to Mech-only market analysis. Set to 0 to disable the cap.",
+            "value": "1",
             "provision_type": "user"
         },
         "MAX_MECH_REQUESTS_PER_CYCLE": {
@@ -139,7 +139,7 @@
         "IRRELEVANT_TOOLS": {
             "name": "Irrelevant tools",
             "description": "",
-            "value": "[\"native-transfer\",\"prediction-online-lite\",\"claude-prediction-online-lite\",\"prediction-online-sme-lite\",\"prediction-request-reasoning-lite\",\"prediction-request-reasoning-claude-lite\",\"prediction-offline-sme\",\"deepmind-optimization\",\"deepmind-optimization-strong\",\"openai-gpt-3.5-turbo\",\"openai-gpt-3.5-turbo-instruct\",\"openai-gpt-4\",\"openai-text-davinci-002\",\"openai-text-davinci-003\",\"prediction-online-sum-url-content\",\"prediction-online-summarized-info\",\"stabilityai-stable-diffusion-512-v2-1\",\"stabilityai-stable-diffusion-768-v2-1\",\"stabilityai-stable-diffusion-v1-5\",\"stabilityai-stable-diffusion-xl-beta-v2-2-2\",\"prediction-url-cot-claude\",\"prediction-url-cot\",\"resolve-market-reasoning-gpt-4.1\",\"resolve-market-jury-v1\",\"openai-gpt-4o-2024-08-06\",\"echo\",\"google_image_gen\",\"short_maker\",\"stabilityai-stable-diffusion-v1-6\",\"stabilityai-stable-diffusion-xl-1024-v1-0\",\"gemini-2.5-flash\",\"anthropic-claude-opus-4-5-latest\",\"claude-prediction-online\",\"prediction-request-rag-claude\",\"prediction-online-sme\",\"profit_pulse\",\"openai-gpt-5.2-chat-latest\",\"prediction_request_reasoning-claude\",\"prediction_request_reasoning-5.2.mini\",\"prediction_request_reasoning\",\"prediction-request-reasoning\",\"prediction-request-rag\",\"prediction-online\",\"claude-prediction-offline\",\"nephyr_risk_mech\",\"nephyr_weather_mech\",\"nephyr_wallets_mech\",\"nephyr_backtest_mech\",\"openai-gpt-4.1-2025-04-14\"]",
+            "value": "[\"native-transfer\",\"prediction-online-lite\",\"claude-prediction-online-lite\",\"prediction-online-sme-lite\",\"prediction-request-reasoning-lite\",\"prediction-request-reasoning-claude-lite\",\"prediction-offline-sme\",\"deepmind-optimization\",\"deepmind-optimization-strong\",\"openai-gpt-3.5-turbo\",\"openai-gpt-3.5-turbo-instruct\",\"openai-gpt-4\",\"openai-text-davinci-002\",\"openai-text-davinci-003\",\"prediction-online-sum-url-content\",\"prediction-online-summarized-info\",\"stabilityai-stable-diffusion-512-v2-1\",\"stabilityai-stable-diffusion-768-v2-1\",\"stabilityai-stable-diffusion-v1-5\",\"stabilityai-stable-diffusion-xl-beta-v2-2-2\",\"prediction-url-cot-claude\",\"prediction-url-cot\",\"resolve-market-reasoning-gpt-4.1\",\"resolve-market-jury-v1\",\"openai-gpt-4o-2024-08-06\",\"echo\",\"google_image_gen\",\"short_maker\",\"stabilityai-stable-diffusion-v1-6\",\"stabilityai-stable-diffusion-xl-1024-v1-0\",\"gemini-2.5-flash\",\"anthropic-claude-opus-4-5-latest\",\"claude-prediction-online\",\"prediction-request-rag-claude\",\"prediction-online-sme\",\"profit_pulse\",\"openai-gpt-5.2-chat-latest\",\"prediction_request_reasoning-claude\",\"prediction_request_reasoning-5.2.mini\",\"prediction_request_reasoning\",\"prediction-request-reasoning\",\"prediction-request-rag\",\"prediction-online\",\"claude-prediction-offline\",\"nephyr_risk_mech\",\"nephyr_weather_mech\",\"nephyr_wallets_mech\",\"nephyr_backtest_mech\",\"openai-gpt-4.1-2025-04-14\",\"propose-question\",\"prediction-offline\",\"prediction-request-reasoning-claude\",\"--tool\",\"synthora_coingecko\",\"synthora_contract_guard\",\"synthora_exchange_rates\",\"synthora_wallet_rep\",\"synthora_routingcheck\",\"synthora_orderbook_liquidity\",\"synthora_ohlcv_candles\",\"coingecko_api\",\"synthora_ibancheck\",\"synthora_ics\",\"synthora_tx_intent\",\"synthora_textstats\",\"synthora_defi_verdict\",\"synthora_code_audit\",\"synthora_crypto_fear_greed\",\"synthora_biccheck\",\"synthora_fx_exchange_rates\"]",
             "provision_type": "fixed"
         },
         "CREATOR_PER_SUBGRAPH": {
@@ -217,7 +217,7 @@
         "IGNORED_MECHS": {
             "name": "Ignored mechs",
             "description": "The list of ignored mechs. The agent will ignore these mechs when using the mech marketplace.",
-            "value": "[\"0x33ca1e117c4254b2ee8cd7ef1621739431a37396\",\"0x2ebd2237e5db798e36a2fa67afa74effb17c5ebb\"]",
+            "value": "[\"0x33ca1e117c4254b2ee8cd7ef1621739431a37396\",\"0x2ebd2237e5db798e36a2fa67afa74effb17c5ebb\",\"0x4e3f0b4c28d4e3f0b4c28d4e3f0b4c28d4e3f0b4\",\"0xa1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2\",\"0x1cAe83A8a68993954ed28E4DE23341f6e672d9dC\",\"0x26928d3cf08ec37456d428c0cadb498968570e53\",\"0xe43a68c509886b6eb1147c7cfb20cacec1cea32b\",\"0x1b5891Ba18DEcE123Cc73FC8b800B03C56aCE135\"]",
             "provision_type": "fixed"
         }
     }
