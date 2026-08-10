@@ -1,6 +1,6 @@
 {
     "name": "Trader Agent",
-    "hash": "bafybeiebrgbtlljmw7eggxzj5otlg224yvslxriy3dus42yeez5vzl5u7y",
+    "hash": "bafybeihlbz5w5k7fm2mwiftfab74ydn6cwbqrrzntzcxsrrt6drrdalqg4",
     "description": "Trader agent for omen prediction markets",
     "image": "https://operate.olas.network/_next/image?url=%2Fimages%2Fprediction-agent.png&w=3840&q=75",
     "service_version": "v0.37.0",
