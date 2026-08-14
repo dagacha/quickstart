@@ -24,3 +24,4 @@ htmlcov/
 .tox/
 *.egg-info/
 .tomte-*
+.operate_password
