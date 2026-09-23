@@ -23,6 +23,7 @@
 import datetime
 import re
 import sys
+import time
 from argparse import Action, ArgumentError, ArgumentParser, Namespace
 from collections import defaultdict
 from enum import Enum
@@ -334,6 +335,14 @@ def _to_content(q: str) -> Dict[str, Any]:
 # The key segment is everything up to the next `/` or whitespace.
 _SUBGRAPH_KEY_RE = re.compile(r"(/api/)[^/\s]+")
 
+# The Graph gateway intermittently hard-closes the TCP connection after
+# exactly 15s (no HTTP response) when the subgraph node is under load.
+# Retry transient failures (connection drops, timeouts, 5xx) with a short
+# pause; retries recover many single kills and spaced retries ride out
+# degraded backend episodes.
+SUBGRAPH_QUERY_MAX_ATTEMPTS = 6
+SUBGRAPH_QUERY_RETRY_DELAY_SECS = 3.0
+
 
 def _redact_subgraph_key(text: str) -> str:
     """Replace any `/api/<key>` segment in `text` with `/api/<redacted>`.
@@ -377,18 +386,48 @@ def _post_subgraph_query(
     the key into terminal output and CI logs even when the wrapper
     message itself is clean. The redacted message preserves the URL
     and the original exception's class name + str for debugging.
+
+    Transient failures (`ConnectionError`, `Timeout`, HTTP 5xx) are retried
+    up to `SUBGRAPH_QUERY_MAX_ATTEMPTS` times with a fixed pause between
+    attempts; non-transient failures (4xx, malformed JSON) fail fast.
     """
-    try:
-        res = requests.post(url, headers=headers, json=payload, timeout=30)
-        res.raise_for_status()
-        return res.json()
-    except requests.RequestException as exc:
-        safe_url = _redact_subgraph_key(url)
-        safe_exc_msg = _redact_subgraph_key(str(exc))
-        raise RuntimeError(
-            f"{label} subgraph query failed for {safe_url} "
-            f"({type(exc).__name__}): {safe_exc_msg}"
-        ) from None
+    last_exc: Optional[requests.RequestException] = None
+    for attempt in range(1, SUBGRAPH_QUERY_MAX_ATTEMPTS + 1):
+        try:
+            res = requests.post(url, headers=headers, json=payload, timeout=30)
+            if res.status_code >= 500:
+                # Retry transient server errors; raise_for_status alone
+                # cannot distinguish 4xx from 5xx in the except branch.
+                raise requests.HTTPError(
+                    f"{res.status_code} server error", response=res
+                )
+            res.raise_for_status()
+            return res.json()
+        except (
+            requests.ConnectionError,
+            requests.Timeout,
+            requests.HTTPError,
+        ) as exc:
+            # Only the programmatic 5xx HTTPError above is retryable;
+            # 4xx from raise_for_status falls through to the fatal branch
+            # below, as do JSON-decode and any other RequestException.
+            retryable = not isinstance(exc, requests.HTTPError) or (
+                exc.response is not None and exc.response.status_code >= 500
+            )
+            last_exc = exc
+            if not retryable or attempt == SUBGRAPH_QUERY_MAX_ATTEMPTS:
+                break
+            time.sleep(SUBGRAPH_QUERY_RETRY_DELAY_SECS)
+        except requests.RequestException as exc:
+            last_exc = exc
+            break
+    safe_url = _redact_subgraph_key(url)
+    safe_exc_msg = _redact_subgraph_key(str(last_exc))
+    raise RuntimeError(
+        f"{label} subgraph query failed for {safe_url} "
+        f"({type(last_exc).__name__}): {safe_exc_msg} "
+        f"(after {attempt} attempt(s))"
+    ) from None
 
 
 def _query_omen_xdai_subgraph(  # pylint: disable=too-many-locals
